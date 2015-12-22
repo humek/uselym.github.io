@@ -1,0 +1,746 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="坑," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="先说结论：
+因为win的cmd默认使用的编码方式是gbk(ANSI) 所以遇到bat或者python中的中文需要在cmd中print显示时，如果出现乱码，首先需要检查是否因为不是 1. gbk编码的中文或2. 在代码中被转换为gbk编码或3.  在python代码中是unicode对象。
+
+别在win下用自带的文本文档编辑器打开utf-8编码的文件并保存，因为win默认会在utf-8编码的内容中加">
+<meta property="og:type" content="article">
+<meta property="og:title" content="win、py、notepad++的编码方式及问题">
+<meta property="og:url" content="uselym.github.io/2015/12/22/pycoding/index.html">
+<meta property="og:site_name" content="LYM's Blog">
+<meta property="og:description" content="先说结论：
+因为win的cmd默认使用的编码方式是gbk(ANSI) 所以遇到bat或者python中的中文需要在cmd中print显示时，如果出现乱码，首先需要检查是否因为不是 1. gbk编码的中文或2. 在代码中被转换为gbk编码或3.  在python代码中是unicode对象。
+
+别在win下用自带的文本文档编辑器打开utf-8编码的文件并保存，因为win默认会在utf-8编码的内容中加">
+<meta property="og:image" content="uselym.github.io/img/py_1.jpg">
+<meta property="og:image" content="uselym.github.io/img/py_2.jpg">
+<meta property="og:updated_time" content="2015-12-22T03:58:49.265Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="win、py、notepad++的编码方式及问题">
+<meta name="twitter:description" content="先说结论：
+因为win的cmd默认使用的编码方式是gbk(ANSI) 所以遇到bat或者python中的中文需要在cmd中print显示时，如果出现乱码，首先需要检查是否因为不是 1. gbk编码的中文或2. 在代码中被转换为gbk编码或3.  在python代码中是unicode对象。
+
+别在win下用自带的文本文档编辑器打开utf-8编码的文件并保存，因为win默认会在utf-8编码的内容中加">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'always',
+    motion: true
+  };
+</script>
+
+  <title> win、py、notepad++的编码方式及问题 | LYM's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">LYM's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">个人技术小站</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                win、py、notepad++的编码方式及问题
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            發表於
+            <time itemprop="dateCreated" datetime="2015-12-22T11:58:49+08:00" content="2015-12-22">
+              2015-12-22
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h1 id="先说结论：">先说结论：</h1><ul>
+<li><p>因为win的cmd默认使用的编码方式是gbk(ANSI) 所以遇到bat或者python中的中文需要在cmd中print显示时，如果出现乱码，首先需要检查是否因为不是 <strong>1. gbk编码的中文或2. 在代码中被转换为gbk编码或3.  在python代码中是unicode对象</strong>。</p>
+</li>
+<li><p><strong>别在win下用自带的文本文档编辑器打开utf-8编码的文件并保存</strong>，因为win默认会在utf-8编码的内容中加BOM，只是查看还没问题因为不保存不会自动加BOM，但是如果保存的话就win就会自动的加BOM</p>
+</li>
+<li><p>注意notepad++的设置，即 <code>设置-&gt;首选项-&gt;新建</code>中<code>新建文档的默认编码方式</code>，<strong>推荐还是按照win默认的ANSI保存</strong>，否则创建的utf-8文档若被自带的文档编辑器打开，就会自动加BOM，导致一些未可知的运行错误</p>
+</li>
+<li><p>对于在win下用notepad++<strong>写.py</strong> 虽然不会有被打开编辑导致加BOM的问题，但是因为有时会需要在cmd中显示，所以最好还是不要用utf-8编码，<strong>用ANSI即gbk编码吧</strong></p>
+</li>
+<li><p>python代码前面添加的 <code>#!coding=utf-8</code>或者 <code>#!coding=gbk</code>等表示编码方式的含义是给python的解释器看的，结论就是<strong>最好与文档本身的编码方式相吻合，对于win下面的python代码，也就是最好是<code>#!coding=gbk</code> </strong></p>
+<a id="more"></a>
+<h1 id="ok,说完了上面的结论，开始说一下具体的细节。">ok,说完了上面的结论，开始说一下具体的细节。</h1><p>写这个文档的原因是因为在notepad++写python代码时遇到的一个问题：</p>
+</li>
+</ul>
+<h1 id="1_前情提要：">1 前情提要：</h1><ul>
+<li>在notepad++中安装了python Script插件使得可以使用notepad++作为一个IDE编辑器。</li>
+<li>因为之前写的一些python代码涉及到中文路径，以及一些中文注释，所以在notepad++中直接用了<code>#!coding=utf-8</code> ，但是.py文件本身的编码方式还是默认的gbk。</li>
+<li>之前在notepad++的设置中设置了<code>使用utf-8应用于打开ANSI文件</code>,这是个很奇怪的功能，就是说文件本身编码的方式还是gbk，但是notepad++打开后先转码成了utf-8并显示，然后在保存的时候还是按原来的方式，即gbk的编码保存，引起了后面分析一系列的误解，之后再详细说明。</li>
+</ul>
+<h1 id="2_问题出现的情形：">2 问题出现的情形：</h1><ul>
+<li>本身这种<strong>“编码关系错乱”</strong>的python代码直接在notepad++中编辑并使用Python Script运行或直接使用python的解释器运行时是没问题的，也就是说—-中文路径可以识别，且能够正确读出路径中的文件等</li>
+<li>将这种代码使用pycharm打开，在IDE中显示代码中的中文就变成了乱码，同时，也无法运行了。</li>
+</ul>
+<h1 id="3_问题的分析：">3 问题的分析：</h1><h2 id="3-1_字符的编码方式">3.1 字符的编码方式</h2><p><strong> ASCII码</strong></p>
+<p>八个二进制位(bit)可以组合出256种状态，这被称为一个字节（byte）。也就是说，一个字节一共可以用来表示256种不同的状态，每一个状态对应一个符号，就是256个符号，从0000000到11111111。</p>
+<p>ASCII码一共规定了128个字符的编码，比如空格”SPACE”是32（二进制00100000），大写的字母A是65（二进制01000001）。这128个符号（包括32个不能打印出来的控制符号），只占用了一个字节的后面7位，最前面的1位统一规定为0。</p>
+<p><strong>非ASCII编码</strong></p>
+<p>英语用128个符号编码就够了，但是用来表示其他语言，128个符号是不够的。比如，在法语中，字母上方有注音符号，它就无法用ASCII码表示。于是，一些欧洲国家就决定，利用字节中闲置的最高位编入新的符号。比如，法语中的é的编码为130（二进制10000010）。这样一来，这些欧洲国家使用的编码体系，可以表示最多256个符号。 但是，这里又出现了新的问题。不同的国家有不同的字母，因此，哪怕它们都使用256个符号的编码方式，代表的字母却不一样。比如，130在法语编码中代表了é，在希伯来语编码中却代表了字母Gimel (ג)，在俄语编码中又会代表另一个符号。但是不管怎样，所有这些编码方式中，0–127表示的符号是一样的，不一样的只是128–255的这一段。</p>
+<p>至于亚洲国家的文字，使用的符号就更多了，汉字就多达10万左右。一个字节只能表示256种符号，肯定是不够的，就必须使用多个字节表达一个符号。比如，简体中文常见的编码方式是GB2312，使用两个字节表示一个汉字，所以理论上最多可以表示256x256=65536个符号。 中文编码的问题需要专文讨论，这篇笔记不涉及。这里只指出，虽然都是用多个字节表示一个符号，但是<strong>GB类的汉字编码与后文的Unicode和UTF-8是毫无关系的</strong>。</p>
+<p><strong>Unicode</strong></p>
+<p>正如上一节所说，世界上存在着多种编码方式，同一个二进制数字可以被解释成不同的符号。因此，要想打开一个文本文件，就必须知道它的编码方式，否则用错误的编码方式解读，就会出现乱码。为什么电子邮件常常出现乱码？就是因为发信人和收信人使用的编码方式不一样。</p>
+<p>可以想象，如果有一种编码，将世界上所有的符号都纳入其中。每一个符号都给予一个独一无二的编码，那么乱码问题就会消失。这就是Unicode，就像它的名字都表示的，这是一种所有符号的编码。 Unicode当然是一个很大的集合，现在的规模可以容纳100多万个符号。每个符号的编码都不一样，比如，U+0639表示阿拉伯字母Ain，U+0041表示英语的大写字母A，U+4E25表示汉字”严”。具体的符号对应表，可以查询unicode.org，或者专门的汉字对应表。 <strong>需要注意的是，Unicode只是一个符号集，它只规定了符号的二进制代码，却没有规定这个二进制代码应该如何存储。</strong></p>
+<p>比如，汉字”严”的unicode是十六进制数4E25，转换成二进制数足足有15位（100111000100101），也就是说这个符号的表示至少需要2个字节。表示其他更大的符号，可能需要3个字节或者4个字节，甚至更多。</p>
+<p>这里就有两个严重的问题，第一个问题是，如何才能区别Unicode和ASCII？计算机怎么知道三个字节表示一个符号，而不是分别表示三个符号呢？第二个问题是，我们已经知道，英文字母只用一个字节表示就够了，如果Unicode统一规定，每个符号用三个或四个字节表示，那么每个英文字母前都必然有二到三个字节是0，这对于存储来说是极大的浪费，文本文件的大小会因此大出二三倍，这是无法接受的。 它们造成的结果是：1）出现了Unicode的多种存储方式，也就是说有许多种不同的二进制格式，可以用来表示Unicode。2）Unicode在很长一段时间内无法推广，直到互联网的出现。</p>
+<p><strong>UTF-8</strong></p>
+<p>互联网的普及，强烈要求出现一种统一的编码方式。UTF-8就是在互联网上使用最广的一种Unicode的实现方式。其他实现方式还包括UTF-16（字符用两个字节或四个字节表示）和UTF-32（字符用四个字节表示），不过在互联网上基本不用。<strong>重复一遍，这里的关系是，UTF-8是Unicode的实现方式之一。</strong> UTF-8最大的一个特点，就是它是一种变长的编码方式。它可以使用1~4个字节表示一个符号，根据不同的符号而变化字节长度。 UTF-8的编码规则很简单，只有二条：</p>
+<ol>
+<li>对于单字节的符号，字节的第一位设为0，后面7位为这个符号的unicode码。因此对于英语字母，UTF-8编码和ASCII码是相同的。</li>
+<li>对于n字节的符号（n&gt;1），第一个字节的前n位都设为1，第n+1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的unicode码。</li>
+</ol>
+<p>下表总结了编码规则，字母x表示可用编码的位。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5.</span> Unicode符号范围 | UTF-<span class="number">8</span>编码方式</span><br><span class="line"><span class="number">6.</span> (十六进制) | （二进制）</span><br><span class="line"><span class="number">7.</span> --------------------+---------------------------------------------</span><br><span class="line"><span class="number">8.</span> <span class="number">0000</span> <span class="number">0000</span>-<span class="number">0000</span> <span class="number">007F</span> | <span class="number">0</span>xxxxxxx</span><br><span class="line"><span class="number">9.</span> <span class="number">0000</span> <span class="number">0080</span>-<span class="number">0000</span> <span class="number">07F</span>F | <span class="number">110</span>xxxxx <span class="number">10</span>xxxxxx</span><br><span class="line"><span class="number">10.</span> <span class="number">0000</span> <span class="number">0800</span>-<span class="number">0000</span> FFFF | <span class="number">1110</span>xxxx <span class="number">10</span>xxxxxx <span class="number">10</span>xxxxxx</span><br><span class="line"><span class="number">11.</span> <span class="number">0001</span> <span class="number">0000</span>-<span class="number">0010</span> FFFF | <span class="number">11110</span>xxx <span class="number">10</span>xxxxxx <span class="number">10</span>xxxxxx <span class="number">10</span>xxxxxx</span><br></pre></td></tr></table></figure></p>
+<p> 跟据上表，解读UTF-8编码非常简单。如果一个字节的第一位是0，则这个字节单独就是一个字符；如果第一位是1，则连续有多少个1，就表示当前字符占用多少个字节。</p>
+<p><strong>下面，还是以汉字”严”为例，演示如何实现UTF-8编码。</strong> 已知”严”的unicode是4E25（100111000100101），根据上表，可以发现4E25处在第三行的范围内（0000 0800-0000 FFFF），因此”严”的UTF-8编码需要三个字节，即格式是”1110xxxx 10xxxxxx 10xxxxxx”。然后，从”严”的最后一个二进制位开始，依次从后向前填入格式中的x，多出的位补0。这样就得到了，”严”的UTF-8编码是”11100100 10111000 10100101”，转换成十六进制就是E4B8A5。</p>
+<p><strong>win下的编码与编码格式转换</strong></p>
+<p>通过上一节的例子，可以看到”严”的Unicode码是4E25，UTF-8编码是E4B8A5，两者是不一样的。它们之间的转换可以通过win的记事本实现。</p>
+<p>打开文件后，点击”文件”菜单中的”另存为”命令，会跳出一个对话框，在最底部有一个”编码”的下拉条。</p>
+<p>里面有四个选项：ANSI，Unicode，Unicode big endian 和 UTF-8。</p>
+<ol>
+<li>ANSI是默认的编码方式。对于英文文件是ASCII编码，对于简体中文文件是GB2312编码（只针对Windows简体中文版，如果是繁体中文版会采用Big5码）。</li>
+<li>Unicode编码指的是UCS-2编码方式，即直接用两个字节存入字符的Unicode码。这个选项用的little endian格式。（<strong>也就是说win下这样转换是little endian，但是从阅读顺序来看这是反的，下面会有说明</strong>）</li>
+<li>Unicode big endian编码与上一个选项相对应。我在下一节会解释little endian和big endian的涵义。</li>
+<li>UTF-8编码，也就是上一节谈到的编码方法。</li>
+<li>选择完”编码方式”后，点击”保存”按钮，文件的编码方式就立刻转换好了。</li>
+</ol>
+<p>Little endian和Big endian 上一节已经提到，Unicode码可以采用UCS-2格式直接存储。以汉字”严”为例，Unicode码是4E25，需要用两个字节存储，一个字节是4E，另一个字节是25。<strong>存储的时候，4E在前，25在后，就是Big endian方式；25在前，4E在后，就是Little endian方式。</strong> 因此，第一个字节在前，就是”大头方式”（Big endian），第二个字节在前就是”小头方式”（Little endian）。</p>
+<p>那么很自然的，就会出现一个问题：计算机怎么知道某一个文件到底采用哪一种方式编码？ Unicode规范中定义，每一个文件的最前面分别加入一个表示编码顺序的字符，这个字符的名字叫做”零宽度非换行空格”（ZERO WIDTH NO-BREAK SPACE），用FEFF表示。这正好是两个字节，而且FF比FE大1。</p>
+<ol>
+<li>如果一个文本文件的头两个字节是FE FF，就表示该文件采用大头方式；</li>
+<li>如果头两个字节是FF FE，就表示该文件采用小头方式。</li>
+</ol>
+<p><strong>试用”我”举例：</strong></p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">*</span><span class="keyword">*</span>big edidon  FE FF<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"></span><br><span class="line">我：\u 62 11</span><br><span class="line"></span><br><span class="line">o:  \u 00 6F</span><br><span class="line"></span><br><span class="line"><span class="keyword">*</span><span class="keyword">*</span>small edidon FF FE<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"></span><br><span class="line">我：\u 11 62</span><br><span class="line"></span><br><span class="line">o:  \u 6F 00</span><br><span class="line"></span><br><span class="line"><span class="keyword">*</span><span class="keyword">*</span>utf-8<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line"></span><br><span class="line">我： E6 88 91</span><br><span class="line"></span><br><span class="line">o:   6F</span><br><span class="line"></span><br><span class="line">PS:对于win系统，是会出现bom标识符的，也就是EF BB BF</span><br><span class="line"></span><br><span class="line"><span class="keyword">*</span><span class="keyword">*</span>ANSI(对于win系统，就是默认的gbk或gb2312方式)<span class="keyword">*</span><span class="keyword">*</span></span><br><span class="line">我：CE D2</span><br><span class="line">o：6F</span><br></pre></td></tr></table></figure>
+<p><strong>ps：网上有一些这种文字编码转换的网站，但是网上的转换因为浏览器的编码问题 一般显示时候很容易出错，可以以这些测试</strong></p>
+<h2 id="3-2_notepad++中字符的编码">3.2 notepad++中字符的编码</h2><p>既然了解了这些编码方式，如何而我的保存为gbk的<code>#！coding=utf-8</code>的文档究竟是什么格式呢，在这里尝试使用查看文件二进制编码的程序进行查看，然后就发现一个很奇怪的现象—-将文件本身拖到二进制查看器，比如beyond compare中时，显示的是gbk编码（因为中文的”我”是CE D2 ，但在notepad++中用hex插件却发现显示的是utf-8编码。一开始以为是notepad++会自动根据文件头上<code>#！coding=utf-8</code>调整字符的编码方式，结果真相却是<strong>在这个文章最前面所说的<code>新建文档的默认编码方式</code>中选择了<code>使用utf-8打开gbk编码文件</code></strong>。</p>
+<p>因此，在notepad++中所有编码为gbk的文件打开后在显示是都被转换到utf-8的编码，所以在notepad++中的hex插件显示文件是utf-8的编码以及在notepad++中点击<code>以ANSI显示</code>会出现乱码 但是退出的时候还是还原到gbk</p>
+<p><strong>解决方案：取消上面所说的这个选项，具体参见本文开头</strong></p>
+<h2 id="3-3_python中字符的编码">3.3 python中字符的编码</h2><p>在本节，以’哈’来解释作示例解释所有的问题，”哈”的各种编码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> UNICODE (UTF8-<span class="number">16</span>):       C854；</span><br><span class="line">UTF-<span class="number">8</span>:                              E59388；</span><br><span class="line">GBK:                                 B9FE。</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-1_python中的str和unicode">3.3.1 python中的str和unicode</h3><p>python中的str和unicode到底是一个什么东西呢？ 在python中提到unicode，一般指的是unicode对象，例如’哈哈’的unicode对象为<code>u&#39;\u54c8\u54c8&#39;</code> 而str，是一个字节数组，这个字节数组表示的是对unicode对象编码(可以是utf-8、gbk、cp936、GB2312)后的存储的格式。这里它仅仅是一个字节流，没有其它的含义，如果你想使这个字节流显示的内容有意义，就必须用正确的编码格式，解码显示。 例如：</p>
+<p> <img src="/img/py_1.jpg" alt="img"></p>
+<p>对于unicode对象哈哈进行编码，编码成一个utf-8编码的str—-s_utf8，s_utf8就是是一个字节数组，存放的就是’\xe5\x93\x88\xe5\x93\x88’，但是这仅仅是一个字节数组，<strong>但是如果将utf-8编码的字节数组直接print，就会显示乱码，为什么</strong>？</p>
+<p> 因为print语句它的实现是将要输出的内容传送了操作系统，操作系统会根据系统的编码对输入的字节流进行编码，这就解释了为什么utf-8格式的字符串”哈哈”，输出的是”鍝堝搱”，因为 ‘\xe5\x93\x88\xe5\x93\x88’用GB2312去解释，其显示的出来就是”鍝堝搱”。</p>
+<p>同时，因为str记录的是字节数组，只是某种编码的存储格式，至于输出到文件或是打印出来是什么格式，完全取决于其解码的编码将它解码成什么样子。这里再对print进行一点补充说明：当将一个unicode对象传给print时，在内部会将该unicode对象进行一次转换，转换成本地的默认编码（<strong>也就是如图中直接输出su编码正常的原因</strong>）。</p>
+<h3 id="3-3-2_str和unicode对象的转换">3.3.2 str和unicode对象的转换</h3><p> str和unicode对象的转换，通过encode和decode实现，具体使用如下：</p>
+<p>将GBK’哈哈’转换成unicode，然后再转换成UTF8</p>
+<p> <img src="/img/py_2.jpg" alt="img"></p>
+<h3 id="3-3-3_操作不同文件的编码格式的文件">3.3.3 操作不同文件的编码格式的文件</h3><p> <strong>建立一个文件test.txt，文件格式用ANSI，内容为: “abc中文” </strong></p>
+<p> <strong>用python来读取</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=gbk</span></span><br><span class="line"><span class="keyword">print</span> open(<span class="string">"Test.txt"</span>).read()</span><br><span class="line">结果：abc中文</span><br><span class="line">把文件格式改成UTF-<span class="number">8</span>：</span><br><span class="line">结果：abc涓枃</span><br></pre></td></tr></table></figure>
+<p>显然，如果文件格式不是gbk，需要解码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=gbk</span></span><br><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line"><span class="keyword">print</span> open(<span class="string">"Test.txt"</span>).read().decode(<span class="string">"utf-8"</span>)</span><br><span class="line">结果：abc中文</span><br></pre></td></tr></table></figure>
+<p> 上面的test.txt我是用Editplus来编辑的，但当我用Windows自带的记事本编辑并存成UTF-8格式时， 运行时报错：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last): File <span class="string">"ChineseTest.py"</span>, line <span class="number">3</span>, <span class="keyword">in</span> print <span class="function"><span class="title">open</span><span class="params">(<span class="string">"Test.txt"</span>)</span></span>.<span class="function"><span class="title">read</span><span class="params">()</span></span>.<span class="function"><span class="title">decode</span><span class="params">(<span class="string">"utf-8"</span>)</span></span></span><br><span class="line"> UnicodeEncodeError: <span class="string">'gbk'</span> codec can<span class="string">'t encode character u'</span>\ufeff<span class="string">' in position 0: illegal multibyte sequence</span></span><br></pre></td></tr></table></figure>
+<p>   原来，某些软件，<strong>如记事本，在保存一个以UTF-8编码的文件时，会在文件开始的地方插入三个不可见的字符（0xEF 0xBB 0xBF，即BOM）。 因此我们在读取时需要自己去掉这些字符</strong>，python中的codecs module定义了这个常量：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=gbk</span></span><br><span class="line"><span class="keyword">import</span> codecs</span><br><span class="line">data = open(<span class="string">"Test.txt"</span>).read()</span><br><span class="line"><span class="keyword">if</span> data[:<span class="number">3</span>] == codecs.BOM_UTF8: data = data[<span class="number">3</span>:]</span><br><span class="line"><span class="keyword">print</span> data.decode(<span class="string">"utf-8"</span>)</span><br><span class="line">结果：abc中文</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-4文件的编码格式和编码声明的作用">3.3.4文件的编码格式和编码声明的作用</h3><p> 源文件的编码格式和对字符串的声明有什么作用呢？</p>
+<p> <strong>先说文件编码格式</strong>：文件的编码格式决定了在该源文件中字符串的编码格式</p>
+<p><strong>而编码声明的作用</strong>:即每个文件在最上面的地方的<code># coding=gbk</code> ，作用有三：</p>
+<ol>
+<li>声明源文件中将出现非ascii编码，通常也就是中文；</li>
+<li>在高级的IDE中，IDE会将你的文件格式保存成你指定编码格式。（<strong>如pycharm</strong>）</li>
+<li>决定源码中类似于u’哈’这类声明的将’哈’解码成unicode所用的编码格式，也是一个比较容易让人迷惑的地方。</li>
+</ol>
+<p>看示例：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:gbk</span></span><br><span class="line">ss = <span class="string">u'哈哈'</span></span><br><span class="line"><span class="keyword">print</span> repr(ss)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'ss:%s'</span> % ss</span><br></pre></td></tr></table></figure></p>
+<p>  将这个些代码保存成一个utf-8文本，运行，你认为会输出什么呢？大家第一感觉肯定输出的肯定是：<br>  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">u'\u54c8\u54c8'</span> ss:哈哈</span><br></pre></td></tr></table></figure></p>
+<p>   但是实际上输出是：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">u'\u935d\u581d\u6431'</span> ss:鍝堝搱</span><br></pre></td></tr></table></figure></p>
+<p>为什么会这样，这时候，就是编码声明在作怪了，在运行ss = u’哈哈’的时候，整个过程可以分为以下几步：</p>
+<ol>
+<li><strong>获取’哈哈’的编码：由文件编码格式确定</strong>，为’\xe5\x93\x88\xe5\x93\x88’（哈哈的utf-8编码形式）</li>
+<li><p>转成 unicode编码的时候，在这个转换的过程中，<strong>对于’\xe5\x93\x88\xe5\x93\x88’的解码，不是用utf-8解码，而是用声明编码处指定的编码GBK</strong>，将’\xe5\x93\x88\xe5\x93\x88’按GBK解码，得到就是’’鍝堝搱’’，这三个字的unicode编码就是u’\u935d\u581d\u6431’，至止可以解释为什么print repr(ss)输出的是u’\u935d\u581d\u6431’ 了。</p>
+<p>好了，这里有点绕，我们来分析下一个示例：</p>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!coding=utf-8</span></span><br><span class="line">ss = <span class="string">u'哈哈'</span></span><br><span class="line"><span class="keyword">print</span> repr(ss)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'ss:%s'</span> % ss</span><br></pre></td></tr></table></figure>
+<p> 将这个示例这次保存成GBK编码形式，运行结果，竟然是：</p>
+<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">UnicodeDecodeError</span>: <span class="symbol">'utf8'</span> codec can't decode byte <span class="number">0xb9</span> <span class="keyword">in</span></span><br><span class="line"> position <span class="number">0</span>: unexpected code byte</span><br></pre></td></tr></table></figure>
+<p>   这里为什么会有utf8解码错误呢？想想上个示例也明白了，</p>
+<ol>
+<li><p>转换第一步，因为文件编码是GBK，得到的是’哈哈’编码是GBK的编码’\xb9\xfe\xb9\xfe’</p>
+</li>
+<li><p>转换成 unicode的时候，会用UTF8对’\xb9\xfe\xb9\xfe’进行解码，而大家查utf-8的编码表会发现，它在utf8编码表中根本不存在，所以会报上述错误。</p>
+</li>
+</ol>
+<p>因此，一切都清楚了—-</p>
+<h1 id="总结">总结</h1><ol>
+<li>notepad++不会根据文件头上的<code>#！coding</code>来自动判断或者改变文件的编码方式，这个<code>#！coding</code>是给python的解释器看的<br>2.<br>对于在notepad++中写python输入中文的问题：<ul>
+<li>如果是先在win中新建一个txt，然后直接改后缀为py，用notepad++打开，作为python的代码进行编写时， 因为此时note是ANSI编码的，默认不识别中文，必须要加<code>#!coding=gbk</code>或者<code>#!coding=utf-8</code>什么的都可以，此时在cmd显示端显示的都不是乱码</li>
+<li>如果note已经改成了utf-8编码的，python似乎可以直接识别，在前面不用加<code>#!coding</code>也可以，不过因为cmd显示端是gbk的编码，如果想要显示不是乱码，可以先.decode(‘utf-8’)转化为unicode或者直接在中文前u’中文’</li>
+</ul>
+</li>
+<li>pycharm打开乱码的问题就是因为之前在notepad++中声明和编码不一致，而pycharm会根据声明来对文档进行编码，至此，还是推荐在win下面统一用gbk编码吧</li>
+</ol>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/坑/" rel="tag">#坑</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/11/26/linux_run/" rel="next" title="linux下一些运维操作">
+                <i class="fa fa-chevron-left"></i> linux下一些运维操作
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/favicon.jpg" alt="lym" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">lym</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">那些 都是很好很好的</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分類</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">標籤</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#先说结论："><span class="nav-text">先说结论：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ok,说完了上面的结论，开始说一下具体的细节。"><span class="nav-text">ok,说完了上面的结论，开始说一下具体的细节。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1_前情提要："><span class="nav-text">1 前情提要：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2_问题出现的情形："><span class="nav-text">2 问题出现的情形：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3_问题的分析："><span class="nav-text">3 问题的分析：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1_字符的编码方式"><span class="nav-text">3.1 字符的编码方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2_notepad++中字符的编码"><span class="nav-text">3.2 notepad++中字符的编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3_python中字符的编码"><span class="nav-text">3.3 python中字符的编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-1_python中的str和unicode"><span class="nav-text">3.3.1 python中的str和unicode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-2_str和unicode对象的转换"><span class="nav-text">3.3.2 str和unicode对象的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-3_操作不同文件的编码格式的文件"><span class="nav-text">3.3.3 操作不同文件的编码格式的文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-4文件的编码格式和编码声明的作用"><span class="nav-text">3.3.4文件的编码格式和编码声明的作用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lym</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
